@@ -1,0 +1,81 @@
+---
+openapi: 3.0.0
+info:
+  title: Checkout API
+  description: This is a simple Checkout API
+  contact:
+    email: mgarlorenzo@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /rules/:
+    get:
+      tags:
+      - checkout rules
+      summary: Return the inventory of rules
+      description: Return the inventory of rules
+      operationId: getRules
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rules'
+        "400":
+          description: bad input parameter
+    put:
+      tags:
+      - checkout rules
+      summary: replace all the rules
+      description: replace all the rules
+      operationId: replaceRules
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Rules'
+      responses:
+        "200":
+          description: rules replaced
+        "400":
+          description: invalid input, object invalid
+components:
+  schemas:
+    Rules:
+      required:
+      - code
+      - discount
+      - id
+      - minitems
+      - name
+      - type
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: A 2 for1 special on VOUCHER items
+        code:
+          type: string
+          example: Widget Adapter
+        type:
+          type: string
+          example: Widget Adapter
+        discount:
+          type: number
+          example: 5
+        minitems:
+          type: number
+          example: 1

@@ -1,0 +1,101 @@
+---
+openapi: 3.0.0
+info:
+  title: Item API
+  description: This is a simple Item API
+  contact:
+    email: mgarlorenzo@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/mgarlorenzo/Item/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /item/:
+    get:
+      tags:
+      - item
+      summary: searches item inventory
+      description: Return the item inventory
+      operationId: getItems
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - item
+      summary: adds item to the inventory
+      description: Adds an item to the system
+      operationId: addItem
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        "201":
+          description: item created
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+  /item/{rfid}:
+    get:
+      tags:
+      - item
+      summary: find one item by rfid
+      description: Gets item by rfid
+      operationId: getItem
+      parameters:
+      - name: rfid
+        in: path
+        description: Rfid
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        "400":
+          description: bad input parameter
+components:
+  schemas:
+    Item:
+      required:
+      - code
+      - name
+      - price
+      - rfid
+      type: object
+      properties:
+        rfid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        code:
+          type: string
+          example: Widget Adapter
+        name:
+          type: string
+          example: Widget Adapter
+        price:
+          type: number
+          example: 5

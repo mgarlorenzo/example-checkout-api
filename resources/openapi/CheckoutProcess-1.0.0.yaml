@@ -1,0 +1,109 @@
+---
+openapi: 3.0.0
+info:
+  title: Checkout API
+  description: This is a simple Checkout API
+  contact:
+    email: mgarlorenzo@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /checkout/items/:
+    get:
+      tags:
+      - checkout process
+      summary: Return all items in the cart
+      description: Return all item in the cart
+      operationId: getCartItems
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - checkout process
+      summary: adds item to the cart
+      description: Adds an item to the cart
+      operationId: addCartItem
+      requestBody:
+        description: RFID of item to add.
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: item added to the cart
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+  /checkout/previeworder/:
+    get:
+      tags:
+      - checkout process
+      summary: Get total amount
+      description: Get total amount
+      operationId: getAmount
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Amount'
+        "400":
+          description: bad input parameter
+components:
+  schemas:
+    Item:
+      required:
+      - rfid
+      type: object
+      properties:
+        rfid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        code:
+          type: string
+          example: Widget Adapter
+        name:
+          type: string
+          example: Widget Adapter
+        price:
+          type: number
+          example: 5
+    Amount:
+      type: object
+      properties:
+        total:
+          type: number
+          example: 50
+        totalBefore:
+          type: number
+          example: 75
+    LineItem:
+      type: object
+      properties:
+        Item:
+          $ref: '#/components/schemas/Item'
+        quantity:
+          type: integer
+          example: 5
+    Cart:
+      type: object
+      properties:
+        LineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
